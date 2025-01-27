@@ -6,7 +6,7 @@ st.markdown("""
     .circle {
         height: 150px;
         width: 150px;
-        background-color: #ffffff;
+        background-color: transparent;
         border-radius: 50%;
         border: 4px solid #4CAF50;
         display: flex;
@@ -15,26 +15,42 @@ st.markdown("""
         margin: 20px auto;
         font-size: 40px;
         font-weight: bold;
+        color: #4CAF50;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
     }
     .arrow-btn {
-        font-size: 60px !important;
+        height: 150px !important;
+        width: 150px !important;
+        font-size: 80px !important;
         padding: 0 !important;
-        margin: 0 20px !important;
         border: none !important;
         background: none !important;
         color: #4CAF50 !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
     }
     .reset-btn {
-        margin: 20px auto;
+        margin: 30px auto;
         width: 100px;
         border-radius: 20px !important;
         background-color: #ff4444 !important;
         color: white !important;
     }
-    .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    
+    /* Dark mode adjustments */
+    [data-testid="stAppViewContainer"] .stDark .circle {
+        color: orange !important;
+        border-color: orange !important;
+    }
+    [data-testid="stAppViewContainer"] .stDark .arrow-btn {
+        color: orange !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -46,7 +62,7 @@ if 'count' not in st.session_state:
 # Function to update count
 def update_count(change):
     new_count = st.session_state.count + change
-    if new_count >= 0:  # Prevent negative numbers
+    if new_count >= 0:
         st.session_state.count = new_count
 
 # Reset function
@@ -54,21 +70,24 @@ def reset_count():
     st.session_state.count = 0
 
 # Main layout
-col1, col2, col3 = st.columns([1, 2, 1])
+st.markdown('<div class="container">', unsafe_allow_html=True)
 
+# Circle display
+st.markdown(f"<div class='circle'>{st.session_state.count}</div>", unsafe_allow_html=True)
+
+# Arrow buttons container
+st.markdown('<div class="button-container">', unsafe_allow_html=True)
+col1, col2 = st.columns(2)
 with col1:
-    if st.button('▼', key='down', on_click=update_count, args=(-1,)):
-        pass
-
+    st.button('▼', key='down', on_click=update_count, args=(-1,), use_container_width=True)
 with col2:
-    st.markdown(f"<div class='circle'>{st.session_state.count}</div>", unsafe_allow_html=True)
-
-with col3:
-    if st.button('▲', key='up', on_click=update_count, args=(1,)):
-        pass
+    st.button('▲', key='up', on_click=update_count, args=(1,), use_container_width=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Reset button
 st.button('Reset', on_click=reset_count, key='reset', use_container_width=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Mobile responsiveness
 st.markdown("""
@@ -80,8 +99,9 @@ st.markdown("""
             font-size: 30px;
         }
         .arrow-btn {
-            font-size: 40px !important;
-            margin: 0 10px !important;
+            height: 100px !important;
+            width: 100px !important;
+            font-size: 50px !important;
         }
     }
     </style>
