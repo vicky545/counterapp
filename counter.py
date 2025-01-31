@@ -58,6 +58,8 @@ st.markdown("""
 # Initialize session state
 if 'count' not in st.session_state:
     st.session_state.count = 0
+if 'input_count' not in st.session_state:
+    st.session_state.input_count = 0
 
 # Function to update count
 def update_count(change):
@@ -72,16 +74,29 @@ def reset_count():
 # Main layout
 st.markdown('<div class="container">', unsafe_allow_html=True)
 
+# User input for setting count
+col1, col2 = st.columns([3, 1])
+with col1:
+    st.number_input(
+        "Set counter value", 
+        value=st.session_state.input_count, 
+        step=1, 
+        key='input_count'
+    )
+with col2:
+    if st.button("Set", use_container_width=True):
+        st.session_state.count = st.session_state.input_count
+
 # Circle display
 st.markdown(f"<div class='circle'>{st.session_state.count}</div>", unsafe_allow_html=True)
 
 # Arrow buttons container
 st.markdown('<div class="button-container">', unsafe_allow_html=True)
-col1, col2 = st.columns(2)
-with col1:
-    st.button('▼', key='down', on_click=update_count, args=(-1,), use_container_width=True)
-with col2:
+col_up, col_down = st.columns(2)
+with col_up:
     st.button('▲', key='up', on_click=update_count, args=(1,), use_container_width=True)
+with col_down:
+    st.button('▼', key='down', on_click=update_count, args=(-1,), use_container_width=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Reset button
